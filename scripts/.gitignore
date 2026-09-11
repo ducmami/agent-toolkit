@@ -1,2 +1,17 @@
 .env
 /output
+
+# Python cache / local / temp
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.temp/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/

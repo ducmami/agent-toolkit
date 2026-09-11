@@ -1,0 +1,8 @@
+{
+  "name": "mmd2image",
+  "private": true,
+  "description": "Local dependency for converting Mermaid to SVG via mermaid-cli",
+  "dependencies": {
+    "@mermaid-js/mermaid-cli": "^11.12.0"
+  }
+}
