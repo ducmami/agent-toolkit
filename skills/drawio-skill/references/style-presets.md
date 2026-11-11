@@ -21,6 +21,8 @@ Only user presets can have `"default": true`. When the user says *"make `<built-
 
 ## Applying a preset
 
+> **Existing diagrams:** these rules apply at generation time. To re-theme a `.drawio` that already exists, run `python3 scripts/restyle.py diagram.drawio --preset <name>` — it applies the palette (hue-mapped), font, and extras without touching layout or edge routing.
+
 When SKILL.md's Step 0 identified a preset, it fully replaces the built-in palette, shape keywords, edge defaults, and font for this diagram — do not mix values from the built-in color table.
 
 **Color lookup.** For each role a shape plays (service / database / queue / gateway / error / external / security), resolve `preset.roles[role]` to a slot name, then `preset.palette[<slot>]` to the `(fillColor, strokeColor)` pair. If `roles[role]` is unset or the resolved slot is `null`, follow this fallback ladder:
@@ -96,8 +98,8 @@ All operations are natural language — no slash commands.
 | "show my `<name>` style", "what's in `<name>`" | Print the preset JSON (pretty-printed) + a one-line summary (source, confidence, is-default). |
 | "make `<name>` the default", "set `<name>` as default" | If `<name>` is a user preset: set `default: true` on it; clear `default` on any other user preset that had it; save both files. If `<name>` is a built-in: copy `<this-skill-dir>/styles/built-in/<name>.json` → `~/.drawio-skill/styles/<name>.json` first, then set `default: true` on the copy. Never mutate the shipped built-in. |
 | "remove default", "unset default" | Clear `default: true` from whichever user preset has it. |
-| "delete `<name>`", "remove `<name>`" | Confirm first. Then `rm ~/.drawio-skill/styles/<name>.json`. Refuse to delete files under `<this-skill-dir>/styles/built-in/` — suggest shadowing with a user preset of the same name. |
-| "rename `<a>` to `<b>`" | `mv ~/.drawio-skill/styles/<a>.json ~/.drawio-skill/styles/<b>.json`, then update the `name` field inside. Fails if `<a>` is a built-in (offer to copy-then-rename instead). |
+| "delete `<name>`", "remove `<name>`" | Confirm first, resolve and verify the exact user-preset path, then remove that single file with a path-aware file operation. Refuse to delete files under `<this-skill-dir>/styles/built-in/` — suggest shadowing with a user preset of the same name. |
+| "rename `<a>` to `<b>`" | Resolve both names inside the user-preset directory, reject separators/traversal, move that single file, then update its `name` field. Fails if `<a>` is a built-in (offer to copy-then-rename instead). |
 | "learn my style from `<path>` as `<name>`" | Dispatch to the Learn flow above. |
 
 ## Preset file validation
